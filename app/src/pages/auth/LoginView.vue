@@ -2,14 +2,13 @@
 import { storeToRefs } from 'pinia';
 import { reactive } from 'vue'
 import { useAuthStore } from '../../stores/auth';
-
 const store = useAuthStore()
 
 const { loading, error } = storeToRefs(useAuthStore())
 
 const form = reactive({
     email: 'homero@mail.com',
-    password: 'passwordd'
+    password: 'password'
 });
 
 const handleLogin = async () => {
@@ -22,7 +21,7 @@ const handleLogin = async () => {
       Ingresar
     </h2>
     <p
-      v-if="error.status"
+      v-if="error.status && !error.data.length"
       class="bg-red-500 text-white p-3 my-4"
     >
       {{ error.message }}
@@ -44,7 +43,9 @@ const handleLogin = async () => {
           placeholder="homero@mail.com"
           class="w-full p-2 border rounded-lg"
         >
-        <small class="text-red-600">errores</small>
+        <template v-if="error.status && error.data.length" v-for="err in error.data.filter(err => err.param === 'email')">
+            <small class="text-red-600 block">{{ err.msg }}</small>
+        </template>
       </div>
 
       <div class="space-y-1">
@@ -60,7 +61,9 @@ const handleLogin = async () => {
           placeholder="*******"
           class="w-full p-2 border rounded-lg"
         >
-        <small class="text-red-600">errores</small>
+        <template v-if="error.status && error.data.length" v-for="err in error.data.filter(err => err.param === 'password')">
+            <small class="text-red-600 block">{{ err.msg }}</small>
+        </template>
       </div>
 
       <button

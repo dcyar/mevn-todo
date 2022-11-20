@@ -8,7 +8,7 @@ const store = useAuthStore();
 const {error} = storeToRefs(store);
 
 const form = reactive({
-    name: 'ca',
+    name: 'Carl',
     email: 'carl@mail.com',
     password: 'password',
     password_confirmation: 'passwordd'
@@ -41,7 +41,9 @@ const handleRegister = async () => {
           placeholder="Homero..."
           class="w-full p-2 border rounded-lg"
         >
-        <small v-if="error.data" class="text-red-600">errores</small>
+        <template v-if="error.status && error.data.length" v-for="err in error.data.filter(err => err.param === 'name')">
+            <small class="text-red-600 block">{{ err.msg }}</small>
+        </template>
       </div>
 
       <div class="space-y-1">
@@ -57,7 +59,9 @@ const handleRegister = async () => {
           placeholder="homero@mail.com"
           class="w-full p-2 border rounded-lg"
         >
-        <small class="text-red-600">errores</small>
+        <template v-if="error.status && error.data.length" v-for="err in error.data.filter(err => err.param === 'email')">
+            <small class="text-red-600 block">{{ err.msg }}</small>
+        </template>
       </div>
 
       <div class="space-y-1">
@@ -73,7 +77,9 @@ const handleRegister = async () => {
           placeholder="*******"
           class="w-full p-2 border rounded-lg"
         >
-        <small class="text-red-600">errores</small>
+        <template v-if="error.status && error.data.length" v-for="err in error.data.filter(err => err.param === 'password')">
+            <small class="text-red-600 block">{{ err.msg }}</small>
+        </template>
       </div>
 
       <div class="space-y-1">
@@ -89,7 +95,9 @@ const handleRegister = async () => {
           placeholder="*******"
           class="w-full p-2 border rounded-lg"
         >
-        <small class="text-red-600">errores</small>
+        <template v-if="error.status && error.data.length" v-for="err in error.data.filter(err => err.param === 'password_confirmation')">
+            <small class="text-red-600 block">{{ err.msg }}</small>
+        </template>
       </div>
       <button
         type="submit"

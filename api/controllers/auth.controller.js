@@ -1,4 +1,5 @@
 const bcryptjs = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const User = require('../models/User');
 const generateToken = require('../helpers/generate-jwt');
@@ -32,7 +33,9 @@ const login = async (req, res) => {
     try {
         const user = await User.findOne({ email });
 
-        if (!bcryptjs.compareSync(password, user.password)) throw new Error('Correo o contraseña no válidos.');
+        if (!bcryptjs.compareSync(password, user.password)) {
+            throw new Error('Correo o contraseña no válidos.');
+        }
 
         const token = await generateToken(user.id);
 
@@ -47,7 +50,22 @@ const login = async (req, res) => {
     }
 };
 
+const validateToken = async (req, res) => {
+    const { token } = req.body;
+
+    try {
+        jwt.verify(token, process.env.JWT_SECRET);
+
+        res.status(204).json();
+    } catch (err) {
+        res.status(400).json({
+            message: 'Token inválido.',
+        });
+    }
+};
+
 module.exports = {
     register,
     login,
+    validateToken,
 };

@@ -1,19 +1,46 @@
 import { ref, reactive } from 'vue';
 import { defineStore } from 'pinia';
 
+const API_URL = 'http://localhost:5000/api';
+
 export const useAuthStore = defineStore('auth', () => {
-    const isAuthenticated = ref(false);
+    const isAuthenticated = ref(localStorage.getItem('user') ? true : false);
     const loading = ref(false);
-    const user = ref(null);
-    const token = ref('');
+    const user = ref(
+        localStorage.getItem('user')
+            ? JSON.parse(localStorage.getItem('user'))
+            : null
+    );
+    const token = ref(localStorage.getItem('token') || '');
     const error = reactive({
         status: false,
         message: '',
-        data: null,
+        data: [],
     });
 
     async function validateToken() {
-        console.log('Validar token con el back');
+        try {
+            const response = await fetch(`${API_URL}/validate-token`, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify({
+                    token: token.value,
+                }),
+            });
+
+            if (response.status >= 300) {
+                throw new Error('Token no válido.');
+            }
+        } catch (err) {
+            isAuthenticated.value = false;
+            user.value = null;
+            token.value = '';
+
+            localStorage.clear();
+        }
     }
 
     async function login(email, password) {
@@ -21,7 +48,7 @@ export const useAuthStore = defineStore('auth', () => {
         loading.value = true;
 
         try {
-            const response = await fetch('http://localhost:5000/api/login', {
+            const response = await fetch(`${API_URL}/login`, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
@@ -35,11 +62,19 @@ export const useAuthStore = defineStore('auth', () => {
 
             const data = await response.json();
 
-            if (response.status > 300) throw new Error(data.message);
+            if (response.status > 300) {
+                if (data.errors) {
+                    error.data = data.errors;
+                }
+
+                throw new Error(data.message);
+            }
 
             user.value = data.user;
             token.value = data.token;
             isAuthenticated.value = true;
+            localStorage.setItem('user', JSON.stringify(data.user));
+            localStorage.setItem('token', data.token);
 
             this.router.push({ name: 'projects' });
         } catch (err) {
@@ -95,6 +130,8 @@ export const useAuthStore = defineStore('auth', () => {
         isAuthenticated.value = false;
         user.value = null;
         token.value = '';
+
+        localStorage.clear();
 
         this.router.push({ name: 'login' });
     }
