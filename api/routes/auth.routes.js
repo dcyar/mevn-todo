@@ -54,6 +54,10 @@ r.post(
     login
 );
 
-r.post('/validate-token', [check('token').not().isEmpty()], validateToken);
+r.post(
+    '/validate-token',
+    [check('token').not().isEmpty(), paramsValidation],
+    validateToken
+);
 
 module.exports = r;

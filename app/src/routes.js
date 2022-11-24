@@ -1,6 +1,5 @@
 import { createWebHistory, createRouter } from 'vue-router';
 import { useAuthStore } from './stores/auth';
-import { isAuthenticated } from './middlewares/auth';
 
 const routes = [
     {
@@ -20,8 +19,25 @@ const routes = [
     },
     {
         path: '/proyectos',
-        name: 'projects',
-        component: () => import('./pages/ProjectsView.vue'),
+        component: () => import('./pages/projects/ProjectsView.vue'),
+        children: [
+            {
+                path: '',
+                name: 'projects',
+                component: () =>
+                    import('./pages/projects/ProyectItemsView.vue'),
+            },
+            {
+                path: 'nuevo',
+                name: 'new-project',
+                component: () => import('./pages/projects/NewProjectView.vue'),
+            },
+            {
+                path: ':id/tareas',
+                name: 'todos',
+                component: () => import('./pages/projects/TodosView.vue'),
+            },
+        ],
     },
 ];
 
@@ -33,7 +49,12 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     const store = useAuthStore();
 
-    store.validateToken();
+    if (
+        store.isAuthenticated &&
+        !['home', 'register', 'login'].includes(to.name)
+    ) {
+        store.validateToken();
+    }
 
     if (
         !store.isAuthenticated &&

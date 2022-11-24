@@ -14,12 +14,16 @@ const userSchema = Schema({
         type: String,
         required: [true, 'La contraseña es requerida.'],
     },
+    projects: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Project',
+        },
+    ],
 });
 
 userSchema.methods.toJSON = function v() {
-    const {
-        __v, password, _id, ...user
-    } = this.toObject();
+    const { __v, password, _id, ...user } = this.toObject();
 
     return { uid: _id, ...user };
 };
