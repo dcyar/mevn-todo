@@ -91,6 +91,31 @@ export const useProjectStore = defineStore('projects', () => {
         } catch (err) {}
     }
 
+    async function destroy(uid) {
+        loading.value = true;
+
+        try {
+            const response = await fetch(`${API_URL}/${uid}`, {
+                method: 'DELETE',
+                headers: {
+                    token: authStore.token,
+                },
+            });
+
+            if (response.status >= 300) {
+                throw new Error('Token no válido.');
+            }
+
+            projects.value = projects.value.filter(
+                (project) => project.uid !== uid
+            );
+        } catch (err) {
+            console.log(err);
+        } finally {
+            loading.value = false;
+        }
+    }
+
     async function saveTask(projectId, title) {
         try {
             const response = await fetch('http://localhost:5000/api/tasks', {
@@ -144,6 +169,34 @@ export const useProjectStore = defineStore('projects', () => {
         } catch (err) {}
     }
 
+    async function destroyTask(uid) {
+        loading.value = true;
+
+        try {
+            const response = await fetch(
+                `http://localhost:5000/api/tasks/${uid}`,
+                {
+                    method: 'DELETE',
+                    headers: {
+                        token: authStore.token,
+                    },
+                }
+            );
+
+            if (response.status >= 300) {
+                throw new Error('Token no válido.');
+            }
+
+            project.value.todos = project.value.todos.filter(
+                (todo) => todo._id !== uid
+            );
+        } catch (err) {
+            console.log(err);
+        } finally {
+            loading.value = false;
+        }
+    }
+
     return {
         loading,
         projects,
@@ -152,8 +205,10 @@ export const useProjectStore = defineStore('projects', () => {
         getProjectById,
         all,
         save,
+        destroy,
         incompleteTasks,
         saveTask,
         updateTask,
+        destroyTask,
     };
 });

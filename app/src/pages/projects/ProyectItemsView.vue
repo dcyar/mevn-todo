@@ -11,6 +11,10 @@ onMounted(async () => {
     await store.all()
 });
 
+const handleDelete = async (uid) => {
+    await store.destroy(uid)
+};
+
 </script>
 <template>
     <div class="flex justify-between items-center">
@@ -22,15 +26,22 @@ onMounted(async () => {
             </svg>
             <h2 class="text-2xl font-bold">Mis Proyectos</h2>
         </div>
-        <router-link :to="{ name: 'new-project' }" class="border p-3 rounded-lg bg-indigo-500 text-white">Nuevo Proyecto
+        <router-link :to="{ name: 'new-project' }" class="border p-3 rounded-lg bg-indigo-500 text-white">
+            Nuevo Proyecto
         </router-link>
     </div>
     <div class="flex space-x-3 mt-5">
         <template v-for="project in projects">
-            <div class="flex justify-between items-center p-5 bg-indigo-200 border rounded-md">
+            <div class="flex justify-between space-x-2 items-center p-5 bg-indigo-200 border rounded-md">
                 <router-link :to="{ name: 'todos', params: { id: project.uid } }" class="p-1">
                     {{ project.name }}
                 </router-link>
+                <button @click="() => handleDelete(project.uid)">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6 text-red-500">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
         </template>
     </div>

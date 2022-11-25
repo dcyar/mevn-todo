@@ -54,8 +54,24 @@ const findById = async (req, res) => {
     }
 };
 
+const destroy = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        await Todo.deleteMany({ project: id });
+        await Project.findByIdAndDelete(id);
+
+        res.status(204).json();
+    } catch (err) {
+        res.status(400).json({
+            message: err.message,
+        });
+    }
+};
+
 module.exports = {
     all,
     store,
     findById,
+    destroy,
 };

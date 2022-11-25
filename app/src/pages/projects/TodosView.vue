@@ -22,6 +22,10 @@ const handleSubmit = async (e) => {
 
     e.target.value = ''
 };
+
+const handleDestroy = async (uid) => {
+    await store.destroyTask(uid)
+}
 </script>
 <template>
     <template v-if="project">
@@ -34,9 +38,15 @@ const handleSubmit = async (e) => {
             <h2 class="text-2xl">Tareas de <strong>{{ project.name }}</strong></h2>
         </div>
         <small>Completado {{ store.incompleteTasks() }} / {{ project.todos.length }}</small>
-        <div class="flex flex-col space-y-4 mt-5">
-            <ul>
+        <div class="space-y-4 mt-5">
+            <ul class="flex flex-col space-y-2">
                 <li v-for="todo in project.todos" :key="todo._id" class="flex items-center space-x-3">
+                    <button @click="() => handleDestroy(todo._id)">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-6 h-6 text-red-500">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
                     <input type="checkbox" @change="handleChange" :checked="todo.completedAt" :data-uid="todo._id"
                         :name="`todo-${todo._id}`" :id="`todo-${todo._id}`" />
                     <label :for="`todo-${todo._id}`">{{ todo.title }}</label>
