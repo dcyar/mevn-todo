@@ -2,7 +2,9 @@ import { ref, reactive } from 'vue';
 import { defineStore } from 'pinia';
 import { useAuthStore } from './auth';
 
-const API_URL = 'http://localhost:5000/api/projects';
+const PROJECTS_API_URL = `${import.meta.env.VITE_API_URL}/projects`;
+const TASKS_API_URL = `${import.meta.env.VITE_API_URL}/tasks`;
+
 const authStore = useAuthStore();
 
 export const useProjectStore = defineStore('projects', () => {
@@ -23,7 +25,7 @@ export const useProjectStore = defineStore('projects', () => {
         loading.value = true;
 
         try {
-            const response = await fetch(`${API_URL}/${uid}`, {
+            const response = await fetch(`${PROJECTS_API_URL}/${uid}`, {
                 method: 'GET',
                 headers: {
                     token: authStore.token,
@@ -48,7 +50,7 @@ export const useProjectStore = defineStore('projects', () => {
         loading.value = true;
 
         try {
-            const response = await fetch(`${API_URL}`, {
+            const response = await fetch(`${PROJECTS_API_URL}`, {
                 method: 'GET',
                 headers: {
                     token: authStore.token,
@@ -71,7 +73,7 @@ export const useProjectStore = defineStore('projects', () => {
 
     async function save(name) {
         try {
-            const response = await fetch(`${API_URL}`, {
+            const response = await fetch(`${PROJECTS_API_URL}`, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
@@ -95,7 +97,7 @@ export const useProjectStore = defineStore('projects', () => {
         loading.value = true;
 
         try {
-            const response = await fetch(`${API_URL}/${uid}`, {
+            const response = await fetch(`${PROJECTS_API_URL}/${uid}`, {
                 method: 'DELETE',
                 headers: {
                     token: authStore.token,
@@ -118,7 +120,7 @@ export const useProjectStore = defineStore('projects', () => {
 
     async function saveTask(projectId, title) {
         try {
-            const response = await fetch('http://localhost:5000/api/tasks', {
+            const response = await fetch(`${TASKS_API_URL}`, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
@@ -143,17 +145,14 @@ export const useProjectStore = defineStore('projects', () => {
 
     async function updateTask(taskId) {
         try {
-            const response = await fetch(
-                `http://localhost:5000/api/tasks/${taskId}`,
-                {
-                    method: 'PATCH',
-                    mode: 'cors',
-                    headers: {
-                        'Content-type': 'application/json',
-                        token: authStore.token,
-                    },
-                }
-            );
+            const response = await fetch(`${TASKS_API_URL}/${taskId}`, {
+                method: 'PATCH',
+                mode: 'cors',
+                headers: {
+                    'Content-type': 'application/json',
+                    token: authStore.token,
+                },
+            });
 
             if (response.status >= 300) {
                 throw new Error('Token no válido.');
@@ -173,15 +172,12 @@ export const useProjectStore = defineStore('projects', () => {
         loading.value = true;
 
         try {
-            const response = await fetch(
-                `http://localhost:5000/api/tasks/${uid}`,
-                {
-                    method: 'DELETE',
-                    headers: {
-                        token: authStore.token,
-                    },
-                }
-            );
+            const response = await fetch(`${TASKS_API_URL}/${uid}`, {
+                method: 'DELETE',
+                headers: {
+                    token: authStore.token,
+                },
+            });
 
             if (response.status >= 300) {
                 throw new Error('Token no válido.');

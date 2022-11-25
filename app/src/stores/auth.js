@@ -1,7 +1,7 @@
 import { ref, reactive } from 'vue';
 import { defineStore } from 'pinia';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const useAuthStore = defineStore('auth', () => {
     const isAuthenticated = ref(localStorage.getItem('user') ? true : false);
