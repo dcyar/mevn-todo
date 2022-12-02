@@ -1,7 +1,8 @@
 <script setup>
 import { storeToRefs } from 'pinia';
-import { reactive } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { useAuthStore } from '../../stores/auth';
+import { setupGoogleClient } from '../../utils/setupGoogleClient';
 
 const store = useAuthStore();
 
@@ -13,11 +14,15 @@ const form = reactive({
     password: '',
     password_confirmation: ''
 });
+const googleBtn = ref()
+
+onMounted(() => {
+    setupGoogleClient(google, googleBtn.value);
+});
 
 const handleRegister = async () => {
     await store.register(form.name, form.email, form.password, form.password_confirmation)
 };
-
 </script>
 <template>
     <div class="w-2/6 mx-auto">
@@ -64,9 +69,14 @@ const handleRegister = async () => {
                     <small class="text-red-600 block">{{ err.msg }}</small>
                 </template>
             </div>
-            <button type="submit" class="mt-3 p-3 border w-full bg-indigo-600 text-white font-semibold">
-                Enviar
-            </button>
+            <div class="flex items-center justify-between space-x-4">
+                <button type="submit" :disabled="loading"
+                    class="p-2 border w-full bg-teal-600 text-white font-semibold">
+                    Registrarse
+                </button>
+                <span>ó</span>
+                <div class="my-3" ref="googleBtn"></div>
+            </div>
         </form>
         <router-link to="/ingresar" class="mt-3 block text-sm text-blue-600">
             ¿Ya tienes una cuenta?

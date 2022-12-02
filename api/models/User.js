@@ -10,6 +10,10 @@ const userSchema = Schema({
         required: [true, 'El correo es requerido.'],
         unique: true,
     },
+    google: {
+        type: Boolean,
+        default: false,
+    },
     password: {
         type: String,
         required: [true, 'La contraseña es requerida.'],

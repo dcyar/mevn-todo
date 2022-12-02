@@ -49,12 +49,13 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     const store = useAuthStore();
 
-    if (
-        store.isAuthenticated &&
-        !['home', 'register', 'login'].includes(to.name)
-    ) {
-        store.validateToken();
-    }
+    store.validateToken();
+    // if (
+    //     store.isAuthenticated &&
+    //     !['home', 'register', 'login'].includes(to.name)
+    // ) {
+    //     store.validateToken();
+    // }
 
     if (
         !store.isAuthenticated &&

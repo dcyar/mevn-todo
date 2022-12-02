@@ -85,6 +85,45 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
+    async function googleLogin(credential) {
+        error.status = false;
+        loading.value = true;
+
+        try {
+            const response = await fetch(`${API_URL}/google/signin`, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify({ credential }),
+            });
+
+            const data = await response.json();
+
+            if (response.status > 300) {
+                if (data.errors) {
+                    error.data = data.errors;
+                }
+
+                throw new Error(data.message);
+            }
+
+            user.value = data.user;
+            token.value = data.token;
+            isAuthenticated.value = true;
+            localStorage.setItem('user', JSON.stringify(data.user));
+            localStorage.setItem('token', data.token);
+
+            this.router.push({ name: 'projects' });
+        } catch (err) {
+            error.status = true;
+            error.message = err.message;
+        } finally {
+            loading.value = false;
+        }
+    }
+
     async function register(name, email, password, password_confirmation) {
         error.status = false;
         loading.value = true;
@@ -144,6 +183,7 @@ export const useAuthStore = defineStore('auth', () => {
         token,
         validateToken,
         login,
+        googleLogin,
         register,
         logout,
     };

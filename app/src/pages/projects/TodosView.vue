@@ -49,7 +49,9 @@ const handleDestroy = async (uid) => {
                     </button>
                     <input type="checkbox" @change="handleChange" :checked="todo.completedAt" :data-uid="todo._id"
                         :name="`todo-${todo._id}`" :id="`todo-${todo._id}`" />
-                    <label :for="`todo-${todo._id}`">{{ todo.title }}</label>
+                    <label :for="`todo-${todo._id}`" :class="{ 'line-through': todo.completedAt }">
+                        {{ todo.title }}
+                    </label>
                 </li>
             </ul>
 

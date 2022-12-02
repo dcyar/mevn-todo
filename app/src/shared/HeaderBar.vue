@@ -6,6 +6,10 @@ const store = useAuthStore();
 const { isAuthenticated, user } = storeToRefs(store);
 
 const handleLogout = () => {
+    if (user.google) {
+        google.accounts.id.disableAutoSelect();
+        google.accounts.id.revoke(user.email);
+    }
     store.logout();
 };
 

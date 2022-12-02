@@ -3,6 +3,7 @@ const { check, body } = require('express-validator');
 const paramsValidation = require('../middlewares/params-validation');
 const {
     login,
+    googleSignin,
     register,
     validateToken,
 } = require('../controllers/auth.controller');
@@ -52,6 +53,15 @@ r.post(
         paramsValidation,
     ],
     login
+);
+
+r.post(
+    '/google/signin',
+    [
+        check('credential', 'La credencial es requerido.').not().isEmpty(),
+        paramsValidation,
+    ],
+    googleSignin
 );
 
 r.post(
