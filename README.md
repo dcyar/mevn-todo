@@ -43,6 +43,7 @@ npm run dev
 ## Características
 
 -   Autenticación por token (Inicio de sesión y registro de usuarios)
+-   Autenticación con google
 -   Proyectos por usuarios (CRD)
 -   Tareas por proyectos (CRD)
 

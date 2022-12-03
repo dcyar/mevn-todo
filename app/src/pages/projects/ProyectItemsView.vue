@@ -26,7 +26,7 @@ const handleDelete = async (uid) => {
             </svg>
             <h2 class="text-2xl font-bold">Mis Proyectos</h2>
         </div>
-        <router-link :to="{ name: 'new-project' }" class="border p-3 rounded-lg bg-indigo-500 text-white">
+        <router-link :to="{ name: 'new-project' }" class="border p-3 rounded-lg bg-teal-500 text-white">
             Nuevo Proyecto
         </router-link>
     </div>
