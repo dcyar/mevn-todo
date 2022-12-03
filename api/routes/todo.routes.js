@@ -10,7 +10,7 @@ r.post(
     '/',
     [
         jwtTokenValidate,
-        check('title', 'El titulo el obligatorio.').isString(),
+        check('title', 'El título es obligatorio.').isString(),
         check('projectId')
             .isMongoId()
             .withMessage('El id de proyecto no es válido.'),

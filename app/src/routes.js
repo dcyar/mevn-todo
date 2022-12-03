@@ -18,6 +18,11 @@ const routes = [
         component: () => import('./pages/auth/LoginView.vue'),
     },
     {
+        path: '/perfil',
+        name: 'profile',
+        component: () => import('./pages/user/ProfileView.vue'),
+    },
+    {
         path: '/proyectos',
         component: () => import('./pages/projects/ProjectsView.vue'),
         children: [

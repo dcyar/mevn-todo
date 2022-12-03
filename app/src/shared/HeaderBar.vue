@@ -66,7 +66,7 @@ const handleLogout = () => {
 
                 <div class="flex items-center gap-4">
                     <div v-if="isAuthenticated" class="sm:flex items-center sm:gap-4">
-                        <p>Hola, <strong>{{ user.name }}</strong></p>
+                        <router-link to="/perfil">Hola, <strong>{{ user.name }}</strong></router-link>
                         <button @click="handleLogout"
                             class="block rounded-md bg-red-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-red-700">
                             Salir
